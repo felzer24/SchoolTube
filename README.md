@@ -10,5 +10,6 @@
 *  Other Stuff!
     *  Blah blah blah
 
-*  Rubric has been submitted on on time (5 points)
+*  Rubric has been submitted on time (5 points)
+
 ### Creative Portion (20 points)
