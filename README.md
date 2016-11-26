@@ -2,13 +2,13 @@
 -   Emily Ramey - 436101
 -   Zachary Polsky - 435339
 
-# PROJECT
+### PROJECT
 *  Administration and User Basics
- * Users can login and enter the home page (5 points)
- * Blah blah blah
+    * Users can login and enter the home page (5 points)
+    * Blah blah blah
 
 *  Other Stuff!
- * Blah blah blah
+    *  Blah blah blah
 
 *  Rubric has been submitted on on time (5 points)
-# Creative Portion (20 points)
+### Creative Portion (20 points)
