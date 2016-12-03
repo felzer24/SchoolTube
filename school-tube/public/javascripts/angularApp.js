@@ -4,7 +4,7 @@ app.config(["$sceDelegateProvider", function($sceDelegateProvider) {
     $sceDelegateProvider.resourceUrlWhitelist([
         'self',
         "https://www.youtube.com/embed/**",
-        "http://www.youtube.com/embed/**",
+        "http://www.youtube.com/embed/**"
     ]);
 }]);
 
@@ -57,11 +57,6 @@ function($scope, posts){
   		alert('Upload complete!');
   		window.location.href = '#/home'; // redirect back to home page after successful upload
 	};
-
-	$scope.like = function(post) {
-	  post.likes += 1;
-	};
-
 }]);
 
 app.controller('PostsCtrl', [
@@ -81,8 +76,8 @@ function($scope, $stateParams, posts) {
 	  $scope.body = '';
 	};
 
-	$scope.like = function(comment) {
-	  comment.likes += 1;
+	$scope.like = function(post) {
+		post.likes += 1;
 	};
 }]);
 
@@ -113,17 +108,22 @@ function($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('home');
 }]);
 
-app.factory('posts', [function() {
+app.factory('posts', ['$http', function($http) {
   var o = {
-    //posts: []
-    posts: [
-    	{title: 'Watch me whip', author: 'bobby95', description: 'I\'m cool', video: getVideoUID('https://www.youtube.com/watch?v=vjW8wmF5VWc'), likes: 20, comments: [{author: 'bobby', body: 'This sucks', likes: 0}]},
-    	{title: 'Baking!', author: 'CakeMaster', description: 'Cake = good', video: getVideoUID('https://www.youtube.com/watch?v=mVBUTEhklcU'), likes: 4, comments: [{author: 'bobby', body: 'This sucks', likes: 0}]},
-    	{title: 'Very doge, much happy', author: 'dogz4lyfe', description: 'nuff said', video: getVideoUID('https://www.youtube.com/watch?v=2J5GzHoKl1Q'), likes: 30, comments: [{author: 'bobby', body: 'This sucks', likes: 0}]},
-    	{title: 'Banana', author: 'fruits', description: 'eat more fruit', video: getVideoUID('https://www.youtube.com/watch?v=Uz4Or95Lg8E'), likes: -3, comments: [{author: 'bobby', body: 'This sucks', likes: 0}]},
-    	{title: 'More catz plz', author: 'kitty', description: 'catz', video: getVideoUID('https://www.youtube.com/watch?v=tntOCGkgt98'), likes: 401, comments: [{author: 'bobby', body: 'This sucks', likes: 0}]},
-    	{title: 'Sportz', author: 'footbol', description: 'like and subscribe', video: getVideoUID('https://www.youtube.com/watch?v=h7Fspb7DNe0'), likes: 21, comments: [{author: 'ted', body: 'bueno', likes: 3}]}
-	]
+    posts: []
+ //    posts: [
+ //    	{title: 'Watch me whip', author: 'bobby95', description: 'I\'m cool', video: getVideoUID('https://www.youtube.com/watch?v=vjW8wmF5VWc'), likes: 20, comments: [{author: 'bobby', body: 'This sucks', likes: 0}]},
+ //    	{title: 'Baking!', author: 'CakeMaster', description: 'Cake = good', video: getVideoUID('https://www.youtube.com/watch?v=mVBUTEhklcU'), likes: 4, comments: [{author: 'bobby', body: 'This sucks', likes: 0}]},
+ //    	{title: 'Very doge, much happy', author: 'dogz4lyfe', description: 'nuff said', video: getVideoUID('https://www.youtube.com/watch?v=2J5GzHoKl1Q'), likes: 30, comments: [{author: 'bobby', body: 'This sucks', likes: 0}]},
+ //    	{title: 'Banana', author: 'fruits', description: 'eat more fruit', video: getVideoUID('https://www.youtube.com/watch?v=Uz4Or95Lg8E'), likes: -3, comments: [{author: 'bobby', body: 'This sucks', likes: 0}]},
+ //    	{title: 'More catz plz', author: 'kitty', description: 'catz', video: getVideoUID('https://www.youtube.com/watch?v=tntOCGkgt98'), likes: 401, comments: [{author: 'bobby', body: 'This sucks', likes: 0}]},
+ //    	{title: 'Sportz', author: 'footbol', description: 'like and subscribe', video: getVideoUID('https://www.youtube.com/watch?v=h7Fspb7DNe0'), likes: 21, comments: [{author: 'ted', body: 'bueno', likes: 3}]}
+	// ]
+  };
+  o.getAll = function() {
+    return $http.get('/posts').success(function(data){
+      angular.copy(data, o.posts);
+    });
   };
   return o;
 }]);
