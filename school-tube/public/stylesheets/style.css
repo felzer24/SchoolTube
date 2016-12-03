@@ -9,6 +9,15 @@ a {
 
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
 
-h1 {
-	color: #4286F4;
+.most-pop {
+	margin-top: 10px;
+}
+
+.author_likes {
+	font-size:15px; 
+	margin-left:10px;
+}
+
+.vert-space {
+	margin-top: 15px;
 }

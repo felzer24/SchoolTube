@@ -35,14 +35,13 @@ function($scope, posts){
 	$scope.addPost = function(){
   		if (!$scope.title || $scope.title === '') { return; }
   		if (!$scope.author || $scope.author === '') { return; }
-  		if (!$scope.content || $scope.content === '') { return; }
+  		if (!$scope.description || $scope.description === '') { return; }
   		if (!$scope.video || $scope.video === '') { return; }
 
 	 	$scope.posts.push({
 	 		title: $scope.title,
 		 	author: $scope.author,
-		 	content: $scope.content,
-		 	tag: $scope.tag,
+		 	description: $scope.description,
 		 	video: getVideoUID($scope.video),
 		 	likes: 0,
 		 	comments: [
@@ -52,8 +51,7 @@ function($scope, posts){
 		});
   		$scope.title = '';
   		$scope.author = '';
-  		$scope.content = '';
-  		$scope.tag = '';
+  		$scope.description = '';
   		$scope.video = '';
 
   		alert('Upload complete!');
@@ -88,16 +86,6 @@ function($scope, $stateParams, posts) {
 	};
 }]);
 
-app.controller('UsersCtrl', [
-'$scope',
-'$stateParams',
-'posts',
-'users',
-function($scope, $stateParams, posts, users) {
-	$scope.user = users.users[$stateParams.id];
-
-}]);
-
 app.config([
 '$stateProvider',
 '$urlRouterProvider',
@@ -120,12 +108,6 @@ function($stateProvider, $urlRouterProvider) {
 		url: '/upload',
 		templateUrl: '/upload.html',
 		controller: 'MainCtrl'
-	})
-
-	.state('users', {
-		url: 'users/{name}',
-		templateUrl: '/users.html',
-		controller: 'UsersCtrl'
 	});
 
   $urlRouterProvider.otherwise('home');
@@ -135,9 +117,12 @@ app.factory('posts', [function() {
   var o = {
     //posts: []
     posts: [
-    	{title: 'Watch me whip', author: 'bobby95', content: '', tag: '', video: getVideoUID('https://www.youtube.com/watch?v=vjW8wmF5VWc'), likes: 20, comments: [{author: 'bobby', body: 'This sucks', likes: 0}]},
-    	{title: 'Baking!', author: 'CakeMaster', content: '', tag: '', video: getVideoUID('https://www.youtube.com/watch?v=mVBUTEhklcU'), likes: 4, comments: [{author: 'bobby', body: 'This sucks', likes: 0}]},
-    	{title: 'Very doge, much happy', author: 'dogz4lyfe', content: '', tag: '', video: getVideoUID('https://www.youtube.com/watch?v=2J5GzHoKl1Q'), likes: 0, comments: [{author: 'bobby', body: 'This sucks', likes: 0}]}
+    	{title: 'Watch me whip', author: 'bobby95', description: 'I\'m cool', video: getVideoUID('https://www.youtube.com/watch?v=vjW8wmF5VWc'), likes: 20, comments: [{author: 'bobby', body: 'This sucks', likes: 0}]},
+    	{title: 'Baking!', author: 'CakeMaster', description: 'Cake = good', video: getVideoUID('https://www.youtube.com/watch?v=mVBUTEhklcU'), likes: 4, comments: [{author: 'bobby', body: 'This sucks', likes: 0}]},
+    	{title: 'Very doge, much happy', author: 'dogz4lyfe', description: 'nuff said', video: getVideoUID('https://www.youtube.com/watch?v=2J5GzHoKl1Q'), likes: 30, comments: [{author: 'bobby', body: 'This sucks', likes: 0}]},
+    	{title: 'Banana', author: 'fruits', description: 'eat more fruit', video: getVideoUID('https://www.youtube.com/watch?v=Uz4Or95Lg8E'), likes: -3, comments: [{author: 'bobby', body: 'This sucks', likes: 0}]},
+    	{title: 'More catz plz', author: 'kitty', description: 'catz', video: getVideoUID('https://www.youtube.com/watch?v=tntOCGkgt98'), likes: 401, comments: [{author: 'bobby', body: 'This sucks', likes: 0}]},
+    	{title: 'Sportz', author: 'footbol', description: 'like and subscribe', video: getVideoUID('https://www.youtube.com/watch?v=h7Fspb7DNe0'), likes: 21, comments: [{author: 'ted', body: 'bueno', likes: 3}]}
 	]
   };
   return o;

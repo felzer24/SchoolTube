@@ -1,75 +1,3 @@
-<!-- <!DOCTYPE html>
-<html>
-  <head>
-    <title>SchoolTube</title>
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.10/angular.min.js"></script>
-    <script src="/javascripts/angularApp.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.js"></script>
-  </head>
-
-  <body ng-app="schoolTube">
-  	<div class="row">
-  		<div class="col-md-6 col-md-offset-3">
-  			<ui-view></ui-view>
-  		</div>
-  	</div>
-  
-  	<script type="text/ng-template" id="/home.html">
-		<div class="page-header">
-			<h1>SchoolTube</h1>
-		</div>
-
-		<form ng-submit="addPost()">
-		  <input type="text" placeholder="Title" ng-model="title"></input>
-		  <br>
-		  <input type="text" placeholder="Link" ng-model="link"></input>
-		  <br>
-		  <button type="submit">Post</button>
-		</form>
-
-
-		<div ng-repeat="post in posts | orderBy:'-upvotes'">
-			<span ng-click="incrementUpvotes(post)">^</span>
-			<a ng-show="post.link" href="{{post.link}}">
-				{{post.title}}
-			</a>
-		  	<span ng-hide="post.link">
-		    	{{post.title}}
-		  	</span>
-
-		  	<span>
-  				<a href="#/posts/{{$index}}">Comments</a>
-		 	</span>
-
-		  - upvotes: {{post.upvotes}}
-		</div>
-	</script>
-
-	<script type="text/ng-template" id="/posts.html">
-		<div class="page-header">
-	    	<h3>
-	      		<a ng-show="post.link" href="{{post.link}}">
-	        		{{post.title}}
-	      		</a>
-	      		<span ng-hide="post.link">
-	        		{{post.title}}
-	      		</span>
-	    	</h3>
-	  	</div>
-
-		<div ng-repeat="comment in post.comments | orderBy:'-upvotes'">
-	  		<span ng-click="incrementUpvotes(comment)">^</span>
-	    		{{comment.upvotes}} - by {{comment.author}}
-	    	<span style="font-size:20px; margin-left:10px;">
-	      		{{comment.body}}
-	    	</span>
-		</div>
-	</script>
-
-  </body>
-
-</html>
- -->
 <!DOCTYPE html>
  <html>
   <head>
@@ -79,7 +7,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.3.0/ui-bootstrap-tpls.min.js"></script>
     <script src="/javascripts/angularApp.js"></script>
     <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
-    <!-- <link rel="stylesheet" href="/stylesheets/style.css"> -->
+    <link rel="stylesheet" href="/stylesheets/style.css">
   </head>
   <body ng-app="schoolTube" style="padding:25px">
 
@@ -90,22 +18,22 @@
       <h1>SchoolTube</h1>
     </div>
 
-      <div class="searchBar">Search: <input type='text' ng-model='search'/><br></div>
-      <h2>Most Popular Videos</h1>
-      <div style="margin-top:10px" ng-repeat="post in posts | filter:search | orderBy: '-likes'">
+      <div>Search: <input type='text' ng-model='search'/><br></div>
+      <h2>Most Popular Videos</h2>
+      <div class="most-pop" ng-repeat="post in posts | filter:search | orderBy: '-likes' | limitTo: 5">
           {{$index+1}}) 
         <a href="#/posts/{{$index}}" style="font-size:20px;">
           {{post.title}} 
         </a> 
         <div>
-          <span style="font-size:15px; margin-left:10px;">
+          <span class="author_likes">
             Uploaded by {{post.author}} ({{post.likes}})
           </span>
         </div>
       </div>
 
-      <form action="#/upload" style="margin-top:20px;">
-        <input type="submit" value="Upload"/>
+      <form class="vert-space" action="#/upload" class="form-group">
+        <input class="btn btn-primary" type="submit" value="Upload"/>
       </form>
     </div>
 </script>
@@ -140,7 +68,7 @@
     <h3>Add a new comment</h3>
 
     <div class="form-group">
-      <input type="text"
+      <input type="text" style="width:50%;" 
       class="form-control"
       placeholder="Comment"
       ng-model="body"></input>
@@ -152,19 +80,13 @@
 <script type="text/ng-template" id="/upload.html">
   <h4><a href="#/home">Home</a></h4>
   <h2>Upload a new video</h2>
-    <form class="postVideoForm" ng-submit="addPost()" style="margin-top:15px">
+    <form class="form-group vert-space" ng-submit="addPost()">
       Title: <input type="text" ng-model="title"></input><br>
       Author: <input type="text" ng-model="author"></input><br>
-      Content: <input type="text" ng-model="content"></input><br>
-      Tag: <input type="text" ng-model="tag"></input><br>
+      Description: <input type="text" ng-model="description"></input><br>
       Link to video: <input type="text" ng-model="video"></input><br>
-      <button type="submit">Upload</button>
+      <button type="submit" class="btn btn-primary">Upload</button>
     </form>
-</script>
-
-<script type="text/ng-template" id="/users.html">
-  <h4><a href="#/home">Home</a></h4>
-  <h2>{{user.name}}
 </script>
 
 </body>

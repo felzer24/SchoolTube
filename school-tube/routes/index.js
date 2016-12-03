@@ -6,28 +6,31 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+require('../models/Posts');
+require('../models/Comments');
+
 module.exports = router;
 
-// var mongoose = require('mongoose');
-// var Post = mongoose.model('Post');
-// var Comment = mongoose.model('Comment');
+var mongoose = require('mongoose');
+var Post = mongoose.model('Post');
+var Comment = mongoose.model('Comment');
 
-// // GET
-// router.get('/posts', function(req, res, next) {
-//   Post.find(function(err, posts){
-//     if(err){ return next(err); }
+// GET
+router.get('/posts', function(req, res, next) {
+  Post.find(function(err, posts){
+    if(err){ return next(err); }
 
-//     res.json(posts);
-//   });
-// });
+    res.json(posts);
+  });
+});
 
-// // POST
-// router.post('/posts', function(req, res, next) {
-//   var post = new Post(req.body);
+// POST
+router.post('/posts', function(req, res, next) {
+  var post = new Post(req.body);
 
-//   post.save(function(err, post){
-//     if(err){ return next(err); }
+  post.save(function(err, post){
+    if(err){ return next(err); }
 
-//     res.json(post);
-//   });
-// });
+    res.json(post);
+  });
+});
