@@ -28,7 +28,6 @@
       <div>Search: <input type='text' ng-model='search'/><br></div>
       <h2>Most Popular Videos</h2>
       <div class="most-pop" ng-repeat="post in posts | filter:search | orderBy: '-likes' | limitTo: 5">
-          {{$index+1}}) 
         <a href="#/posts/{{post._id}}" style="font-size:20px;">
           {{post.title}} 
         </a> 
@@ -37,7 +36,7 @@
             Uploaded by {{post.author}} ({{post.likes}})
           </span> --> 
           <span ng-show="post.author"> <!-- is this right? (replaces above) -->
-            Uploaded by <a>{{post.author}}</a>
+            Uploaded by <a>{{post.author}}</a> | 
           </span>
           <span class="glyphicon glyphicon-thumbs-up" ng-click="like(post)"></span> {{post.likes}}
         </div>
@@ -103,7 +102,7 @@
   <h2>Upload a new video</h2>
     <form class="form-group vert-space" ng-submit="addPost()">
       Title: <input type="text" ng-model="title"></input><br>
-      Author: <input type="text" ng-model="author"></input><br>
+      <!-- Author: <input type="text" ng-model="author"></input><br> -->
       Description: <input type="text" ng-model="description"></input><br>
       Link to video: <input type="text" ng-model="video"></input><br>
       <button type="submit" class="btn btn-primary">Upload</button>

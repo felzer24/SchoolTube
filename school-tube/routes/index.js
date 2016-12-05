@@ -20,7 +20,7 @@ var User = mongoose.model('User');
 var passport = require('passport');
 var jwt = require('express-jwt');
 
-var auth = jwt({secret: 'TOKEN', userProperty: 'payload'});
+var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
 
 router.get('/posts', function(req, res, next) {
   Post.find(function(err, posts){
@@ -41,8 +41,7 @@ router.post('/posts', auth, function(req, res, next) {
   });
 });
 
-// pre-loading post
-router.param('post', auth, function(req, res, next, id) {
+router.param('post', function(req, res, next, id) {
   var query = Post.findById(id);
 
   query.exec(function (err, post){
@@ -91,8 +90,8 @@ router.post('/posts/:post/comments', auth, function(req, res, next) {
 
 // FIX ME (I think this is working now)
 
-// pre-loading a comment (comment or :comment ?)
-router.param('comment', function(req, res, next, id) {
+//	comment or :comment ?
+router.param(':comment', function(req, res, next, id) {
   var query = Comment.findById(id);
 
   query.exec(function (err, comment){
@@ -104,8 +103,8 @@ router.param('comment', function(req, res, next, id) {
   });
 });
  
- // changed from /upvote to /like
 router.put('/posts/:post/comments/:comment/like', auth, function(req, res, next) {
+  console.log("req.comment", req.comment);
   req.comment.like(function(err, comment){
     if (err) { return next(err); }
 
@@ -139,6 +138,7 @@ router.post('/login', function(req, res, next){
   passport.authenticate('local', function(err, user, info){
     if(err){ return next(err); }
 
+    
     if(user){
       return res.json({token: user.generateJWT()});
     } else {
@@ -146,5 +146,3 @@ router.post('/login', function(req, res, next){
     }
   })(req, res, next);
 });
-
-
