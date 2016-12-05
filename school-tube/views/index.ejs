@@ -1,3 +1,4 @@
+<!-- Framework of website developed using tutorial at https://thinkster.io/mean-stack-tutorial -->
 <!DOCTYPE html>
  <html>
   <head>
@@ -9,32 +10,47 @@
     <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/stylesheets/style.css">
   </head>
-  <body ng-app="schoolTube" style="padding:25px">
+  <body ng-app="schoolTube">
+    <nav class="navbar navbar-default pull-right" ng-controller="NavCtrl">
+      <ul class="nav navbar-nav">
+        <li ng-show="isLoggedIn()"><a>{{ currentUser() }}</a></li>
+        <li ng-show="isLoggedIn()"><a href="" ng-click="logOut()">Log Out</a></li>
+        <li ng-hide="isLoggedIn()"><a href="/#/login">Log In</a></li>
+        <li ng-hide="isLoggedIn()"><a href="/#/register">Register</a></li>
+      </ul>
+    </nav>
 
   <ui-view></ui-view>
 
   <script type="text/ng-template" id="/home.html">
     <div class="page-header">
       <h1>SchoolTube</h1>
-    </div>
-
       <div>Search: <input type='text' ng-model='search'/><br></div>
       <h2>Most Popular Videos</h2>
       <div class="most-pop" ng-repeat="post in posts | filter:search | orderBy: '-likes' | limitTo: 5">
           {{$index+1}}) 
-        <a href="#/posts/{{$index}}" style="font-size:20px;">
+        <a href="#/posts/{{post._id}}" style="font-size:20px;">
           {{post.title}} 
         </a> 
         <div>
-          <span class="author_likes">
+          <!-- <span class="author_likes">
             Uploaded by {{post.author}} ({{post.likes}})
+          </span> --> 
+          <span ng-show="post.author"> <!-- is this right? (replaces above) -->
+            Uploaded by <a>{{post.author}}</a>
           </span>
+          <span class="glyphicon glyphicon-thumbs-up" ng-click="like(post)"></span> {{post.likes}}
         </div>
       </div>
 
-      <form class="vert-space" action="#/upload" class="form-group">
+      <form class="form-group vert-space" action="#/upload" ng-show="isLoggedIn()">
         <input class="btn btn-primary" type="submit" value="Upload"/>
       </form>
+
+      <div ng-hide="isLoggedIn()">
+        <h3>You need to <a href="/#/login">Log In</a> or <a href="/#/register">Register</a> before you can add a post.</h3>
+      </div>
+
     </div>
 </script>
 
@@ -48,12 +64,14 @@
       </iframe>
     </div>
     <div style="margin-bottom: 20px;">
-      <span style="font-size:20px; margin-left:10px; margin-right:20px;">
-        Uploaded by {{post.author}}
+      <span style="font-size:20px; margin-left:10px;">
+        Uploaded by {{post.author}} ({{post.likes}})
       </span>
-      <span style="font-size:15px;" class="glyphicon glyphicon-thumbs-up" ng-click="like(post)"></span>
-        {{post.likes}}
     </div>
+    <div style="margin-bottom: 15px; margin-left:15px;">
+      <span>Description: {{post.description}}</span>
+    </div>
+  </div>
 
   <div ng-repeat="comment in post.comments | orderBy:'-likes'">
     <span style="font-size:15px; margin-left:10px; color:#4286F4;">
@@ -63,18 +81,21 @@
     <div style="margin-left:10px" class="glyphicon glyphicon-thumbs-up" ng-click="like(comment)"></div>
     <span style="margin-left:5px">{{comment.likes}}</span>
   </div>
-    <form ng-submit="addComment()"
-    style="margin-top:20px;">
-    <h3>Add a new comment</h3>
 
-    <div class="form-group">
-      <input type="text" style="width:50%;" 
-      class="form-control"
-      placeholder="Comment"
-      ng-model="body"></input>
+    <form ng-submit="addComment()" ng-show="isLoggedIn()" style="margin-top:20px;">
+      <h3>Add a new comment</h3>
+      <div class="form-group">
+        <input type="text" style="width:50%;" 
+        class="form-control"
+        placeholder="Comment"
+        ng-model="body"></input>
+      </div>
+      <button type="submit" class="btn btn-primary">Post</button>
+    </form>
+
+    <div ng-hide="isLoggedIn()">
+    <h3>You need to <a href="/#/login">Log In</a> or <a href="/#/register">Register</a> before you can comment.</h3>
     </div>
-    <button type="submit" class="btn btn-primary">Post</button>
-  </form>
 </script>
 
 <script type="text/ng-template" id="/upload.html">
@@ -89,5 +110,71 @@
     </form>
 </script>
 
+<script type="text/ng-template" id="/register.html">
+  <div class="page-header">
+    <h1>SchoolTube</h1>
+  </div>
+
+  <div ng-show="error" class="alert alert-danger row">
+    <span>{{ error.message }}</span>
+  </div>
+
+  <form ng-submit="register()" style="margin-top:30px;">
+    <h3>Register</h3> 
+
+    <div class="form-group">
+      <input type="text"
+      class="form-control"
+      placeholder="Username"
+      ng-model="user.username"></input>
+    </div>
+    <div class="form-group">
+      <input type="password"
+      class="form-control"
+      placeholder="Password"
+      ng-model="user.password"></input>
+    </div>
+    <button type="submit" class="btn btn-primary">Register</button>
+  </form>
+</script>
+
+<script type="text/ng-template" id="/login.html">
+  <div class="page-header">
+    <h1>SchoolTube</h1>
+  </div>
+
+  <div ng-show="error" class="alert alert-danger row">
+    <span>{{ error.message }}</span>
+  </div>
+
+  <form ng-submit="logIn()" style="margin-top:30px;">
+    <h3>Log In</h3> 
+
+    <div class="form-group">
+      <input type="text"
+      class="form-control"
+      placeholder="Username"
+      ng-model="user.username"></input>
+    </div>
+    <div class="form-group">
+      <input type="password"
+      class="form-control"
+      placeholder="Password"
+      ng-model="user.password"></input>
+    </div>
+    <button type="submit" class="btn btn-primary">Log In</button>
+  </form>
+</script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
