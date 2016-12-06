@@ -21,3 +21,43 @@ a {
 .vert-space {
 	margin-top: 15px;
 }
+
+.big-top-space {
+	margin-top: 30px;
+}
+
+.small-text-field {
+	width: 30%;
+}
+
+.comment-author {
+	font-size:15px; 
+	color:#4286F4;
+}
+
+.comment-body {
+	font-size:15px; 
+	margin-left:20px;
+}
+
+.comment-like-button {
+	margin-left:10px;
+}
+
+.comment-like-num {
+	margin-left: 5px;
+}
+
+.font-20 {
+	font-size: 20px;
+}
+
+.author-upload {
+	font-size: 20px; 
+	margin-left: 10px;
+}
+
+.description-tag {
+	margin-bottom: 15px; 
+	margin-left:15px;
+}

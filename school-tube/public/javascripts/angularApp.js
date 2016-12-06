@@ -361,18 +361,25 @@ function($scope, posts, auth){
 			title: $scope.title,
 			description: $scope.description,
 			video: getVideoUID($scope.video),
+			tag: $scope.tag,
 		});
   		$scope.title = '';
   		$scope.description = '';
   		$scope.video = '';
+  		$scope.tag = '';
 
   		alert('Upload complete!');
   		window.location.href = '#/home'; // redirect back to home page after successful upload
 	};
 
 	$scope.like = function(post) {
-		console.log("trying to like a post");
 		posts.like(post);
+	};
+
+	$scope.profile = function(author) {
+		console.log("author clicked", author);
+		window.localStorage['clicked-profile'] = author;
+		window.location.href = ('#/users/' + author);
 	};
 
 }]);
@@ -385,8 +392,6 @@ app.controller('PostsCtrl', [
 function($scope, posts, post, auth) {
 	$scope.isLoggedIn = auth.isLoggedIn;
 	$scope.post = post;
-
-	$scope.currentUser = auth.currentUser; // added by me
 
 	$scope.addComment = function(){
 	  if ($scope.body === '') { return; }
@@ -471,6 +476,18 @@ function($stateProvider, $urlRouterProvider) {
 		controller: 'MainCtrl'
 	})
 
+	.state('allVideos', {
+		url: '/allVideos',
+		templateUrl: '/allVideos.html',
+		controller: 'MainCtrl'
+	})
+
+	.state('users', {
+		url: '/users/{id}',
+		templateUrl: '/users.html',
+		controller: 'MainCtrl'
+	})
+
 	.state('login', {
 		url: '/login',
 		templateUrl: '/login.html',
@@ -496,12 +513,31 @@ function($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('home');
 }]);
 
+// app.factory('users', ['$http', '$window', function($http, $window) {
+// 	var u = {
+// 		users: []
+// 	};
+
+// 	u.getAll = function() {
+// 		return $http.get('/users').success(function(data) {
+// 			angular.copy(data, u.users);
+// 		});
+// 	};
+
+// 	u.get = function(id) {
+// 		return $http.get('/users/' + id).then(function(res) {
+// 			return res.data;
+// 		});
+// 	};
+// 	return u;
+// }]);
+
 app.factory('posts', ['$http', '$window', 'auth', function($http, $window, auth) {
   var o = {
     posts: []
   };
   o.getAll = function() {
-    return $http.get('/posts').success(function(data){
+    return $http.get('/posts').success(function(data) {
       angular.copy(data, o.posts);
     });
   };
@@ -523,7 +559,7 @@ app.factory('posts', ['$http', '$window', 'auth', function($http, $window, auth)
   };
 
 	o.get = function(id) {
-	  return $http.get('/posts/' + id).then(function(res){
+	  return $http.get('/posts/' + id).then(function(res) {
 	    return res.data;
 	  });
 	};
@@ -590,6 +626,9 @@ app.factory('auth', ['$http', '$window', function($http, $window) {
 
 	auth.logOut = function() {
 		$window.localStorage.removeItem('school-tube-token');
+		window.location.href = '#/home'; // redirect back to home page after successful upload
 	};
 	return auth;
 }]);
+
+

@@ -5,6 +5,7 @@ var PostSchema = new mongoose.Schema({
 	author: String,
 	description: String,
 	video: String,
+	tag: String,
 	likes: {type: Number, default: 0},
 	comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }]
 });

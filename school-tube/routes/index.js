@@ -86,14 +86,8 @@ router.post('/posts/:post/comments', auth, function(req, res, next) {
   });
 });
 
-// My code
-
-// FIX ME (I think this is working now)
-
-//	comment or :comment ?
-router.param(':comment', function(req, res, next, id) {
+router.param('comment', function(req, res, next, id) {
   var query = Comment.findById(id);
-
   query.exec(function (err, comment){
     if (err) { return next(err); }
     if (!comment) { return next(new Error('can\'t find comment')); }
@@ -104,7 +98,6 @@ router.param(':comment', function(req, res, next, id) {
 });
  
 router.put('/posts/:post/comments/:comment/like', auth, function(req, res, next) {
-  console.log("req.comment", req.comment);
   req.comment.like(function(err, comment){
     if (err) { return next(err); }
 

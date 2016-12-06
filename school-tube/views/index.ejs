@@ -25,23 +25,32 @@
   <script type="text/ng-template" id="/home.html">
     <div class="page-header">
       <h1>SchoolTube</h1>
-      <div>Search: <input type='text' ng-model='search'/><br></div>
+      <div class="searchBar"> Search: <input type='text' ng-model='searchText'/></input><br>
+        <input type="radio" ng-model='searchTag' value="Math"/> Math </input>
+        <input type="radio" ng-model='searchTag' value="Science"/> Science </input>
+        <input type="radio" ng-model='searchTag' value="English"/> English </input>
+        <input type="radio" ng-model='searchTag' value=''/> No filter </input>
+      <br></div>
+
       <h2>Most Popular Videos</h2>
-      <div class="most-pop" ng-repeat="post in posts | filter:search | orderBy: '-likes' | limitTo: 5">
-        <a href="#/posts/{{post._id}}" style="font-size:20px;">
+      <div class="most-pop" ng-repeat="post in posts | filter:searchText | filter:{tag:searchTag} | orderBy: '-likes' | limitTo: 5">
+        <a href="#/posts/{{post._id}}" class="font-20">
           {{post.title}} 
         </a> 
         <div>
-          <!-- <span class="author_likes">
-            Uploaded by {{post.author}} ({{post.likes}})
-          </span> --> 
-          <span ng-show="post.author"> <!-- is this right? (replaces above) -->
-            Uploaded by <a>{{post.author}}</a> | 
+          <span ng-show="post.author"> 
+            Uploaded by <a ng-click="profile(post.author)">{{post.author}}</a> | 
           </span>
           <span class="glyphicon glyphicon-thumbs-up" ng-click="like(post)"></span> {{post.likes}}
+          <span ng-show="post.tag">
+            <br>Tag: {{post.tag}}
+          </span>
         </div>
       </div>
-
+      <form class="form-group vert-space" action="#/allVideos">
+        <input class="btn btn-primary" type="submit" value="See All"/>
+      </form>
+      <br>
       <form class="form-group vert-space" action="#/upload" ng-show="isLoggedIn()">
         <input class="btn btn-primary" type="submit" value="Upload"/>
       </form>
@@ -49,9 +58,40 @@
       <div ng-hide="isLoggedIn()">
         <h3>You need to <a href="/#/login">Log In</a> or <a href="/#/register">Register</a> before you can add a post.</h3>
       </div>
-
     </div>
-</script>
+  </script>
+
+  <script type="text/ng-template" id="/allVideos.html">
+    <div class="page-header">
+      <h1>SchoolTube</h1>
+      <div class="searchBar"> Search: <input type='text' ng-model='searchAllText'/></input><br>
+        <input type="radio" ng-model='searchAllTag' value="Math"/> Math </input>
+        <input type="radio" ng-model='searchAllTag' value="Science"/> Science </input>
+        <input type="radio" ng-model='searchAllTag' value="English"/> English </input>
+        <input type="radio" ng-model='searchAllTag' value=''/> No filter </input>
+      <br></div>
+
+      <h2>All Videos</h2>
+      <div class="most-pop" ng-repeat="post in posts | filter:searchAllText | filter:{tag:searchAllTag} | orderBy: '-likes'">
+        <a href="#/posts/{{post._id}}" class="font-20">
+          {{post.title}} 
+        </a> 
+        <div>
+          <span ng-show="post.author"> 
+            Uploaded by <a>{{post.author}}</a> | 
+          </span>
+          <span class="glyphicon glyphicon-thumbs-up" ng-click="like(post)"></span> {{post.likes}}
+          <span ng-show="post.tag">
+            <br>Tag: {{post.tag}}
+          </span>
+        </div>
+      </div>
+
+      <form class="form-group vert-space" action="#/home">
+        <input class="btn btn-primary" type="submit" value="Back to Home"/>
+      </form>
+    </div>
+  </script>
 
 <script type="text/ng-template" id="/posts.html">
   <h4><a href="#/home">Home</a></h4>
@@ -62,29 +102,30 @@
         ng-src="{{post.video}}">
       </iframe>
     </div>
-    <div style="margin-bottom: 20px;">
-      <span style="font-size:20px; margin-left:10px;">
+    <div class="vert-space">
+      <span class="author-upload">
         Uploaded by {{post.author}} ({{post.likes}})
       </span>
     </div>
-    <div style="margin-bottom: 15px; margin-left:15px;">
-      <span>Description: {{post.description}}</span>
+    <div class="description-tag">
+      <span>Description: {{post.description}}</span><br>
+      <span ng-show="post.tag">Tag: {{post.tag}}</span>
     </div>
   </div>
 
   <div ng-repeat="comment in post.comments | orderBy:'-likes'">
-    <span style="font-size:15px; margin-left:10px; color:#4286F4;">
+    <span class="comment-author">
       {{comment.author}} 
     </span>
-    <div style="font-size:15px; margin-left:10px;">{{comment.body}}</div>
-    <div style="margin-left:10px" class="glyphicon glyphicon-thumbs-up" ng-click="like(comment)"></div>
-    <span style="margin-left:5px">{{comment.likes}}</span>
+    <div class="comment-body=">{{comment.body}}</div>
+    <div class="glyphicon glyphicon-thumbs-up comment-like-button" ng-click="like(comment)"></div>
+    <span class="comment-like-num">{{comment.likes}}</span>
   </div>
 
-    <form ng-submit="addComment()" ng-show="isLoggedIn()" style="margin-top:20px;">
+    <form ng-submit="addComment()" ng-show="isLoggedIn()" class="vert-space">
       <h3>Add a new comment</h3>
       <div class="form-group">
-        <input type="text" style="width:50%;" 
+        <input type="text" class="small-text-field" 
         class="form-control"
         placeholder="Comment"
         ng-model="body"></input>
@@ -102,9 +143,11 @@
   <h2>Upload a new video</h2>
     <form class="form-group vert-space" ng-submit="addPost()">
       Title: <input type="text" ng-model="title"></input><br>
-      <!-- Author: <input type="text" ng-model="author"></input><br> -->
       Description: <input type="text" ng-model="description"></input><br>
       Link to video: <input type="text" ng-model="video"></input><br>
+      Tag: <input type="radio" name="subject" value="Math" ng-model="tag"> Math</input>
+           <input type="radio" name="subject" value="Science" ng-model="tag"> Science</input>
+           <input type="radio" name="subject" value="English" ng-model="tag"> English</input><br><br>
       <button type="submit" class="btn btn-primary">Upload</button>
     </form>
 </script>
@@ -118,7 +161,7 @@
     <span>{{ error.message }}</span>
   </div>
 
-  <form ng-submit="register()" style="margin-top:30px;">
+  <form ng-submit="register()" class="big-top-space small-text-field">
     <h3>Register</h3> 
 
     <div class="form-group">
@@ -146,7 +189,7 @@
     <span>{{ error.message }}</span>
   </div>
 
-  <form ng-submit="logIn()" style="margin-top:30px;">
+  <form ng-submit="logIn()" class="big-top-space small-text-field">
     <h3>Log In</h3> 
 
     <div class="form-group">
@@ -163,6 +206,18 @@
     </div>
     <button type="submit" class="btn btn-primary">Log In</button>
   </form>
+</script>
+
+<script type="text/ng-template" id="/users.html">
+  <div class="page-header">
+    <h2> Hello end</h2>
+      <div ng-repeat="post in posts"> 
+        <span>{{post.author}}</span><br>
+      </div>
+      <form class="form-group vert-space" action="#/home">
+        <input class="btn btn-primary" type="submit" value="Back to Home"/></input>
+      </form>
+
 </script>
 </body>
 </html>
