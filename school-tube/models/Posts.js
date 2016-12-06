@@ -15,6 +15,11 @@ PostSchema.methods.like = function(cb) {
 	this.save(cb);
 }
 
+PostSchema.methods.dislike = function(cb) {
+	this.likes -= 1;
+	this.save(cb);
+}
+
 mongoose.model('Post', PostSchema);
 
 // var mongoose = require('mongoose');

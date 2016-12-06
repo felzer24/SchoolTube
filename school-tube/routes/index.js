@@ -69,6 +69,14 @@ router.put('/posts/:post/like', auth, function(req, res, next) {
   });
 });
 
+router.put('/posts/:post/dislike', auth, function(req, res, next) {
+  req.post.dislike(function(err, post){
+    if (err) { return next(err); }
+
+    res.json(post);
+  });
+});
+
 router.post('/posts/:post/comments', auth, function(req, res, next) {
   var comment = new Comment(req.body);
   comment.post = req.post;
@@ -99,6 +107,14 @@ router.param('comment', function(req, res, next, id) {
  
 router.put('/posts/:post/comments/:comment/like', auth, function(req, res, next) {
   req.comment.like(function(err, comment){
+    if (err) { return next(err); }
+
+    res.json(comment);
+  });
+});
+
+router.put('/posts/:post/comments/:comment/dislike', auth, function(req, res, next) {
+  req.comment.dislike(function(err, comment){
     if (err) { return next(err); }
 
     res.json(comment);

@@ -41,7 +41,8 @@
           <span ng-show="post.author"> 
             Uploaded by <a ng-click="profile(post.author)">{{post.author}}</a> | 
           </span>
-          <span class="glyphicon glyphicon-thumbs-up" ng-click="like(post)"></span> {{post.likes}}
+          <span class="glyphicon glyphicon-thumbs-up" ng-click="like(post)"></span> {{post.likes}} 
+          <span class="glyphicon glyphicon-thumbs-down" ng-click="dislike(post)"></span> 
           <span ng-show="post.tag">
             <br>Tag: {{post.tag}}
           </span>
@@ -80,7 +81,8 @@
           <span ng-show="post.author"> 
             Uploaded by <a>{{post.author}}</a> | 
           </span>
-          <span class="glyphicon glyphicon-thumbs-up" ng-click="like(post)"></span> {{post.likes}}
+          <span class="glyphicon glyphicon-thumbs-up" ng-click="like(post)"></span>
+          <span class="glyphicon glyphicon-thumbs-down" ng-click="dislike(post)"></span> {{post.likes}}
           <span ng-show="post.tag">
             <br>Tag: {{post.tag}}
           </span>
@@ -118,7 +120,8 @@
       {{comment.author}} 
     </span>
     <div class="comment-body=">{{comment.body}}</div>
-    <div class="glyphicon glyphicon-thumbs-up comment-like-button" ng-click="like(comment)"></div>
+    <div class="glyphicon glyphicon-thumbs-up comment-like-button" ng-click="like(comment)"> </div>
+    <div class="glyphicon glyphicon-thumbs-down comment-like-button" ng-click="dislike(comment)"></div>
     <span class="comment-like-num">{{comment.likes}}</span>
   </div>
 

@@ -376,6 +376,10 @@ function($scope, posts, auth){
 		posts.like(post);
 	};
 
+	$scope.dislike = function(post) {
+		posts.dislike(post);
+	};
+
 	$scope.profile = function(author) {
 		console.log("author clicked", author);
 		window.localStorage['clicked-profile'] = author;
@@ -407,6 +411,10 @@ function($scope, posts, post, auth) {
 	$scope.like = function(comment) {
 		posts.likeComment(post, comment);
 	};
+
+	$scope.dislike = function(comment) {
+		posts.dislikeComment(post, comment);
+	}
 }]);
 
 app.controller('AuthCtrl', [
@@ -558,6 +566,14 @@ app.factory('posts', ['$http', '$window', 'auth', function($http, $window, auth)
   	});
   };
 
+  o.dislike = function(post) {
+  	return $http.put('/posts/' + post._id + '/dislike', null, {
+  		headers: {Authorization: 'Bearer ' + auth.getToken()}
+  	}).success(function(data) {
+  		post.likes -= 1;
+  	});
+  };
+
 	o.get = function(id) {
 	  return $http.get('/posts/' + id).then(function(res) {
 	    return res.data;
@@ -575,6 +591,14 @@ app.factory('posts', ['$http', '$window', 'auth', function($http, $window, auth)
 			headers: {Authorization: 'Bearer ' + auth.getToken()}
 		}).success(function(data) {
 			comment.likes += 1;
+		});
+	};
+
+	o.dislikeComment = function(post, comment) {
+		return $http.put('/posts/' + post._id + '/comments/' + comment._id + '/dislike', null, {
+			headers: {Authorization: 'Bearer ' + auth.getToken()}
+		}).success(function(data) {
+			comment.likes -= 1;
 		});
 	};
 
