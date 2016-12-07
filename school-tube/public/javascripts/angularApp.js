@@ -29,8 +29,11 @@ app.controller('MainCtrl', [
 'playlists',
 'auth',
 function($scope, posts, playlists, auth){
+	
 	$scope.isLoggedIn = auth.isLoggedIn;
 	$scope.posts = posts.posts;
+
+	$scope.searchTag = '';
 
 	$scope.searchPost = '';
 	$scope.searchPlaylist = '';
@@ -86,9 +89,16 @@ app.controller('mainPlaylistCtrl', [
 	'auth',
 	function($scope, posts, playlists, auth){
 		$scope.isLoggedIn = auth.isLoggedIn;
+
 		$scope.playlists = playlists.playlists;
+
 		$scope.posts = posts.posts;
+
 		$scope.search = '';
+		$scope.goToCreate = function(){
+			window.location.href = '#/createPlaylist';
+		}
+
 		$scope.playlist = {
 	        title : "",
 	        description: "",
@@ -97,15 +107,17 @@ app.controller('mainPlaylistCtrl', [
 		$scope.i = 1;
 		$scope.toggleVideo = function(post){
 			var inPlaylist = false;
-			for(var i=0;i<$scope.playlist.posts.length;i++){
+			var index = -1;
+			for(var i = 0; i < $scope.playlist.posts.length; i++){
 				var x = $scope.playlist.posts[i];
 				if(x['title']==post['title'] && x['author'] == post['author']
-					&& x['description'] == post['description']){
+					&& x['description'] == post['description']) {
 					inPlaylist = true;
+					index = i;
 				}
 			}
 			if(inPlaylist){
-				$scope.playlist.posts.pop(post);
+				$scope.playlist.posts.splice(index, 1);
 			}
 			else{
 				$scope.playlist.posts.push(post);
@@ -271,7 +283,12 @@ function($stateProvider, $urlRouterProvider) {
 	.state('allVideos', {
 		url: '/allVideos',
 		templateUrl: '/allVideos.html',
-		controller: 'MainCtrl'
+		controller: 'MainCtrl',
+		resolve: {
+	    	postPromise: ['posts', function(posts){
+	      		return posts.getAll();
+	    	}]
+	  	}
 	})
 
 	.state('users', {
@@ -444,7 +461,8 @@ app.factory('playlists', ['$http', '$window', 'auth', function($http, $window, a
   	return $http.put('/playlists/' + playlist._id + '/delete', null, {
   		headers: {Authorization: 'Bearer ' + auth.getToken()}
   	}).success(function(data) {
-  		a.playlists.pop(data);
+  		var index = a.playlists.indexOf(data);
+  		a.playlists.splice(index, 1);
   		window.location.href = '#/viewPlaylists';
   	});
   };

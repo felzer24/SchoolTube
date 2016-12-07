@@ -26,14 +26,14 @@
     <div class="page-header">
       <h1>SchoolTube</h1>
       <div class="searchBar"> Search: <input type='text' ng-model='searchPost'/></input><br>
-        <input type="radio" ng-model='searchTag' value="Math"/> Math </input>
-        <input type="radio" ng-model='searchTag' value="Science"/> Science </input>
-        <input type="radio" ng-model='searchTag' value="English"/> English </input>
-        <input type="radio" ng-model='searchTag' value=''/> No filter </input>
+        <input type="radio" name="subject" ng-model='searchTag' value="Math"/> Math </input>
+        <input type="radio" name="subject" ng-model='searchTag' value="Science"/> Science </input>
+        <input type="radio" name="subject" ng-model='searchTag' value="English"/> English </input>
+        <input type="radio" name="subject" ng-model='searchTag' value=''/> No filter </input>
       <br></div>
 
       <h2>Most Popular Videos</h2>
-      <div class="most-pop" ng-repeat="post in posts | filter:searchText | filter:{tag:searchTag} | orderBy: '-likes' | limitTo: 5">
+      <div class="most-pop" ng-repeat="post in posts | filter:searchPost | filter:{tag:searchTag} | orderBy: '-likes' | limitTo: 5">
         <a href="#/posts/{{post._id}}" class="font-20">
           {{post.title}} 
         </a> 
@@ -172,15 +172,15 @@
   <script type="text/ng-template" id="/allVideos.html">
     <div class="page-header">
       <h1>SchoolTube</h1>
-      <div class="searchBar"> Search: <input type='text' ng-model='searchAllText'/></input><br>
-        <input type="radio" ng-model='searchAllTag' value="Math"/> Math </input>
-        <input type="radio" ng-model='searchAllTag' value="Science"/> Science </input>
-        <input type="radio" ng-model='searchAllTag' value="English"/> English </input>
-        <input type="radio" ng-model='searchAllTag' value=''/> No filter </input>
+      <div class="searchBar"> Search: <input type='text' ng-model='searchPost'/></input><br>
+        <input type="radio" name="subject" ng-model='searchTag' value="Math"/> Math </input>
+        <input type="radio" name="subject" ng-model='searchTag' value="Science"/> Science </input>
+        <input type="radio" name="subject" ng-model='searchTag' value="English"/> English </input>
+        <input type="radio" name="subject" ng-model='searchTag' value=''/> No filter </input>
       <br></div>
 
       <h2>All Videos</h2>
-      <div class="most-pop" ng-repeat="post in posts | filter:searchAllText | filter:{tag:searchAllTag} | orderBy: '-likes'">
+      <div class="most-pop" ng-repeat="post in posts | filter:searchPost | filter:{tag:searchTag} | orderBy: '-likes'">
         <a href="#/posts/{{post._id}}" class="font-20">
           {{post.title}} 
         </a> 
