@@ -12,6 +12,7 @@ var mongoose = require('mongoose');
 require('./models/Posts');
 require('./models/Comments');
 require('./models/Users');
+require('./models/Playlists');
 
 var passport = require('passport');
 require('./config/passport');

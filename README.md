@@ -32,3 +32,7 @@
 *  Rubric has been submitted on time (5 points)
 
 ### Creative Portion (20 points)
+* Only registered users can like or dislike videos (5 points)
+* Only registered users can post comments on videos (5 points)
+* Only registered users can like or dislike comments (5 points)
+* Home page contains a list of top 5 most popular videos and can be sorted by tag (5 points)

@@ -25,7 +25,7 @@
   <script type="text/ng-template" id="/home.html">
     <div class="page-header">
       <h1>SchoolTube</h1>
-      <div class="searchBar"> Search: <input type='text' ng-model='searchText'/></input><br>
+      <div class="searchBar"> Search: <input type='text' ng-model='searchPost'/></input><br>
         <input type="radio" ng-model='searchTag' value="Math"/> Math </input>
         <input type="radio" ng-model='searchTag' value="Science"/> Science </input>
         <input type="radio" ng-model='searchTag' value="English"/> English </input>
@@ -56,11 +56,118 @@
         <input class="btn btn-primary" type="submit" value="Upload"/>
       </form>
 
+      <!-- Emily Code -->
+      <form class="form-group vert-space" ng-show="isLoggedIn()">
+        <input class="btn btn-primary" value="Create a new playlist" ng-click="goToCreate()"/>
+      </form>
+
+      <form class="form-group vert-space">
+        <input class="btn btn-primary" value="View playlists" ng-click="goToView()"/>
+      </form>
+      <!-- Emily Code End -->
+
       <div ng-hide="isLoggedIn()">
         <h3>You need to <a href="/#/login">Log In</a> or <a href="/#/register">Register</a> before you can add a post.</h3>
       </div>
     </div>
   </script>
+
+  <!-- *********************** Emily Code ******************************** -->
+  <script type="text/ng-template" id="/createPlaylist.html">
+  <div class="page-header">
+    <h1>SchoolTube</h1>
+    <div>Title your new playlist: <input type='text' ng-model='playlist.title'/><br></div>
+    <div>Describe your new playlist: <input type='text' ng-model='playlist.description'/><br></div>
+    <div>Search: <input type='text' ng-model='search'/><br></div>
+    <h2>Choose videos:</h2>
+    <div class="most-pop" ng-repeat="post in posts | filter:search | orderBy: '-likes'">
+        <input type="checkbox" ng-click="toggleVideo(post)"></input>
+      <a href="#/posts/{{post._id}}" class="font-20">
+        {{post.title}} 
+      </a> 
+      <div>
+        <span ng-show="post.author"> 
+          Uploaded by <a>{{post.author}}</a>
+        </span>
+        <span class="glyphicon glyphicon-thumbs-up" ng-click="like(post)"></span> {{post.likes}}
+      </div>
+    </div>
+
+    <form class="form-group vert-space" ng-submit="createPlaylist(playlist)">
+      <input class="btn btn-primary" type="submit" value="Create"/>
+    </form>
+
+  </div>
+</script>
+
+<script type="text/ng-template" id="/viewPlaylists.html">
+    <div class="page-header">
+      <h4><a href="#/home">Home</a></h4>
+      <h1>Playlists</h1>
+      <div>Search for a playlist: <input type='text' ng-model='searchPlaylist'/><br></div>
+      <div class="most-pop" ng-repeat="playlist in playlists | filter:searchPlaylist">
+        <a href="#/playlists/{{playlist._id}}" class="font-20">
+          {{playlist.title}} 
+        </a> 
+        <div>
+          <span ng-show="playlist.author">
+            Uploaded by <a>{{playlist.author}}</a>
+          </span>
+        </div>
+      </div>
+
+      <form class="form-group vert-space" ng-show="isLoggedIn()">
+        <input class="btn btn-primary" value="Create a new playlist" ng-click="goToCreate()"/>
+      </form>
+
+      <div ng-hide="isLoggedIn()">
+        <h3>You need to <a href="/#/login">Log In</a> or <a href="/#/register">Register</a> before you can add a post.</h3>
+      </div>
+
+    </div>
+</script>
+
+<script type="text/ng-template" id="/playlists.html">
+  <h4><a href="#/home">Home</a></h4>
+  <div class="page-header">
+    <h2>{{playlist.title}}</h2>
+    <div style="margin-bottom: 20px;">
+      <span style="font-size:20px; margin-left:10px;">
+        Uploaded by {{playlist.author}}
+      </span>
+    </div>
+    <div style="margin-bottom: 15px; margin-left:15px;">
+      <span>Description: {{playlist.description}}</span>
+    </div>
+  </div>
+
+  <div class="most-pop" ng-repeat="post in playlist.posts">
+      {{$index+1}})
+    <a href="#/posts/{{post._id}}" style="font-size:20px;">
+      {{post.title}} 
+    </a> 
+    <div>
+      <span ng-show="post.author">
+        Uploaded by <a>{{post.author}}</a>
+      </span>
+      <span class="glyphicon glyphicon-thumbs-up" ng-click="like(post)"></span> {{post.likes}}
+    </div>
+  </div>
+
+  <form class="form-group vert-space" ng-show="isAuthor">
+    <input class="btn btn-primary" value="Delete this playlist" ng-click="delete()"/>
+  </form>
+
+  <form class="form-group vert-space" action="#/addVideo" ng-show="isAuthor">
+    <input class="btn btn-primary" type="submit" value="Add a video"/>
+  </form>
+
+  <div ng-hide="isLoggedIn()">
+  <h3>You need to <a href="/#/login">Log In</a> or <a href="/#/register">Register</a> before you can comment.</h3>
+  </div>
+</script>
+
+  <!-- *********************** Emily Code End ******************************** -->
 
   <script type="text/ng-template" id="/allVideos.html">
     <div class="page-header">

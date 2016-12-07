@@ -9,6 +9,7 @@ router.get('/', function(req, res, next) {
 require('../models/Posts');
 require('../models/Comments');
 require('../models/Users');
+require('../models/Playlists');
 
 module.exports = router;
 
@@ -16,11 +17,66 @@ var mongoose = require('mongoose');
 var Post = mongoose.model('Post');
 var Comment = mongoose.model('Comment');
 var User = mongoose.model('User');
+var Playlist = mongoose.model('Playlist');
 
 var passport = require('passport');
 var jwt = require('express-jwt');
 
 var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
+
+router.get('/playlists', function(req, res, next){
+  Playlist.find(function(err, playlists){
+    if(err){ return next(err); }
+
+    res.json(playlists);
+  });
+});
+
+router.post('/playlists', auth, function(req, res, next){
+  console.log("request:");
+  console.log(req.body);
+  var playlist = new Playlist(req.body);
+  playlist.author = req.payload.username;
+  console.log(playlist);
+  console.log("trying to save playlist");
+  playlist.save(function(err, playlist){
+    if(err){
+      console.log("something went wrong: "+err);
+      return next(err);
+    }
+    res.json(playlist);
+  });
+});
+
+router.get('/playlists/:playlist', function(req, res, next) {
+  req.playlist.populate('posts', function(err, playlist) {
+    if (err) { return next(err); }
+
+    res.json(playlist);
+  });
+});
+
+router.put('/playlists/:playlist/delete', auth, function(req, res, next) {
+  req.query.remove(function(err, playlist){
+    res.json(playlist);
+  });
+});
+
+router.param('playlist', function(req, res, next, id) {
+  var query = Playlist.findById(id);
+
+  query.exec(function (err, playlist){
+    if (err) { return next(err); }
+    if (!playlist) {
+      console.log("can't find playlist");
+      return next(new Error('can\'t find playlist'));
+    }
+
+    req.playlist = playlist;
+    req.query = query;
+    return next();
+  });
+});
 
 router.get('/posts', function(req, res, next) {
   Post.find(function(err, posts){
